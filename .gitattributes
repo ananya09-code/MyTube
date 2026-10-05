@@ -1,0 +1,19 @@
+# Windows batch files must have CRLF line endings, or cmd.exe can misbehave
+# around labels and multi-line blocks. Force it in the repository too.
+*.bat text eol=crlf
+
+# Shell scripts must stay LF.
+*.sh text eol=lf
+
+# The helper is a Python script; keep it LF and UTF-8.
+*.py text eol=lf
+
+# Extension source.
+*.js text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+
+# Never rewrite the line endings of the .txt lists this extension produces.
+*.txt -text

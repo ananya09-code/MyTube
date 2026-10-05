@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>mytube</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- 1. Header with the main ON/OFF toggle -->
+  <header class="header">
+    <div class="title-block">
+      <h1>mytube</h1>
+      <span class="subtitle">for yt-dlp</span>
+    </div>
+    <label class="switch" title="Turn collecting on or off">
+      <input type="checkbox" id="collectToggle">
+      <span class="slider"></span>
+      <span class="switch-label">Collect links</span>
+    </label>
+  </header>
+
+  <!-- 2. List selector row -->
+  <div class="row list-row">
+    <select id="listSelect" aria-label="Active list"></select>
+    <button id="newListBtn" class="btn" type="button">New list</button>
+    <button id="deleteListBtn" class="btn btn-danger" type="button">Delete</button>
+  </div>
+
+  <!-- Inline "new list" form (prompt() does not work well in popups) -->
+  <div id="newListForm" class="inline-form hidden">
+    <input type="text" id="newListName" placeholder="List name, e.g. Python" maxlength="60">
+    <button id="createListBtn" class="btn btn-primary" type="button">Create</button>
+    <button id="cancelNewListBtn" class="btn" type="button">Cancel</button>
+  </div>
+
+  <!-- Inline confirmation row, reused by Delete list and Clear -->
+  <div id="confirmForm" class="inline-form hidden">
+    <span id="confirmText" class="confirm-text"></span>
+    <button id="confirmYesBtn" class="btn btn-danger" type="button">Yes</button>
+    <button id="confirmNoBtn" class="btn" type="button">Cancel</button>
+  </div>
+
+  <!-- 3. Add buttons -->
+  <div class="row action-row">
+    <button id="addTabBtn" class="btn" type="button">Add current tab</button>
+    <button id="pasteBtn" class="btn" type="button">Paste from clipboard</button>
+  </div>
+
+  <!-- Empty state when there is no list yet -->
+  <div id="emptyState" class="empty-state hidden">
+    <p class="empty-title">No topic lists yet</p>
+    <p class="empty-hint">Create your first topic list to start collecting links.</p>
+  </div>
+
+  <!-- 4. Links of the active list -->
+  <ul id="linkList" class="link-list" aria-label="Links in the active list"></ul>
+  <p id="emptyList" class="empty-hint hidden">This list is empty. Add a link to get started.</p>
+
+  <!-- 7. Status line -->
+  <div id="status" class="status" role="status"></div>
+  <div id="openFolderRow" class="open-folder-row"></div>
+
+  <!-- 6. Settings (collapsible) -->
+  <details class="settings">
+    <summary>Settings</summary>
+    <label class="check">
+      <input type="checkbox" id="clearAfterDownload">
+      <span>Clear list automatically after download</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="autoCollectCopy">
+      <span>Auto-collect links I copy on web pages</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="useFolders">
+      <span>Create a folder named after the list</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="alsoSaveBat">
+      <span>Also save a ready-to-run yt-dlp script (<code>.bat</code>)</span>
+    </label>
+    <label class="field">
+      <span>Folder name (only used by "Save .txt only")</span>
+      <input type="text" id="folderPrefix" placeholder="LinkCollector" maxlength="40">
+    </label>
+    <p class="hint">
+      "Save .txt only" writes to
+      <code>&lt;downloads&gt;/&lt;Folder name&gt;/&lt;List name&gt;/</code>.
+      "Download videos" ignores this and always uses
+      <code>Desktop/&lt;List name&gt;/</code>.
+    </p>
+
+    <label class="field">
+      <span>Extra yt-dlp options</span>
+      <input type="text" id="extraYtdlpOptions" maxlength="300"
+             placeholder='e.g. -f "bv*+ba/b" --cookies-from-browser chrome'>
+    </label>
+    <p class="hint">
+      Only flags starting with <code>-</code> are accepted; shell characters such as
+      <code>;</code> <code>&amp;</code> <code>|</code> are rejected by the helper.
+      The value is split with proper quote handling on the host, so
+      <code>-f "bv*+ba/b"</code> arrives as one argument.
+    </p>
+
+    <button id="testHelperBtn" class="btn" type="button">Test helper</button>
+    <div id="helperStatus" class="status"></div>
+  </details>
+
+  <!-- 5. Footer -->
+  <footer class="footer">
+    <span id="linkCount" class="count">0 links</span>
+    <div class="footer-actions">
+      <button id="clearBtn" class="btn" type="button">Clear</button>
+      <button id="saveTxtBtn" class="btn" type="button"
+              title="Save only the .txt list through the Save dialog (no yt-dlp needed)">Save .txt only</button>
+      <button id="downloadBtn" class="btn btn-primary" type="button"
+              title="Create Desktop/&lt;ListName&gt;/ and run yt-dlp there">Download videos</button>
+    </div>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
